@@ -1,0 +1,12 @@
+{
+    "disks":[
+        {
+            "name":"data",
+            "mountTo":"public/uploads/img"
+        },
+        {
+            "name":"xcel",
+            "mountTo":"public/uploads/xcel"
+        }
+    ]
+}
