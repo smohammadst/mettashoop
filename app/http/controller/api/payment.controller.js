@@ -14,8 +14,9 @@ const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const MelipayamakApi = require('melipayamak');
 const { UserModel } = require("../../../model/user.model");
-const username = '09353040700';
-const password = 'cahefm';
+const constans = require("../../../module/constans");
+const username = '09300000000';
+const password = '******';
 const api = new MelipayamakApi(username, password);
 
 class PaymentController extends Controller {
@@ -306,6 +307,32 @@ class PaymentController extends Controller {
       }
       res.status(StatusCodes.OK).json({
         result
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+  async notSend(req, res, next) {
+    try {
+      const { id } = req.params;
+      const payment = await PaymentModel.findOne({ _id: id });
+      const user = await UserModel.findOne({ _id: payment.user })
+      const sale = await SaleProductModel({ authority: payment.authority })
+      sale.notSend = true
+      sale.save()
+      const sms = api.sms()
+      const to = "" + user.phone
+      const from = "50004001040700";
+      let text = `مبلغ شما مرجوع داده شد به مبلغ ${payment.amount}`
+      sms.send(to, from, text).then(e => {
+        console.log(e)
+      }).catch(err => {
+        console.log("err" + err)
+      });
+      return res.status(200).json({
+        data: {
+          message: "مبلغ مرجوع شد"
+        }
       })
     } catch (error) {
       next(error)

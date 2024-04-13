@@ -11,8 +11,8 @@ const createError = require("http-errors");
 const Controller = require("../controller");
 const bcrypt = require("bcrypt");
 const MelipayamakApi = require('melipayamak');
-const username = '09353040700';
-const password = 'cahefm';
+const username = '090000000';
+const password = '****';
 const api = new MelipayamakApi(username, password);
 
 class AuthController extends Controller {
@@ -78,7 +78,6 @@ class AuthController extends Controller {
       const token = await SingAccessToken(findUser._id);
       const refreshToken = await SignRefreshToken(findUser._id);
       if (findUser.Role == "ADMIN") bool = true
-      // if (findUser.phone == "09353040700") bool = true
       await this.cookie(res, findUser, token);
       return res.status(StatusCodes.OK).json({
         data: {
@@ -191,7 +190,7 @@ class AuthController extends Controller {
       const phone = await VerifyRefreshToken(refreshToken);
       const user = await UserModel.findOne({ phone });
       let bool = false;
-      if (user.phone == "09133243570" || user.phone == "09395356683" || user.phone == "09125082329" || user.phone == "09358484606", user.phone == "09353040700") bool = true;
+      if (user.phone == "09133243570") bool = true;
       const accessToken = await SingAccessToken(user._id);
       await this.cookie(res, user, accessToken);
       console.log(bool);

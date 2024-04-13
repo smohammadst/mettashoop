@@ -41,9 +41,9 @@ const router = require("express").Router();
  *      201:
  *        description: success
  */
-router.post("/payment", VerifyAccessToken, PaymentController.PaymentGateway);
+// router.post("/payment", VerifyAccessToken, PaymentController.PaymentGateway);
 
-router.get("/verify", PaymentController.verifyPayment);
+// router.get("/verify", PaymentController.verifyPayment);
 
 /**
  * @swagger
@@ -111,6 +111,18 @@ router.post(
   VerifyAccessToken,
   ProductController.updateBascket
 )
+
+/**
+ * @swagger
+ * /payment/notSend:
+ *  get:
+ *    tags: [Payment]
+ *    responses:
+ *      200:
+ *        descriptions: get All Payment
+ */
+
+router.get("/notSend", VerifyAccessToken, checkRole("ADMIN"), PaymentController.notSend)
 
 module.exports = {
   ApiPayment: router,

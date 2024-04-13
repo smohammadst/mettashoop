@@ -2,8 +2,8 @@ const { default: mongoose } = require("mongoose");
 const { UserModel } = require("./user.model");
 const MelipayamakApi = require('melipayamak');
 const { PaymentModel } = require("./payments");
-const username = '09353040700';
-const password = 'cahefm';
+const username = '0900000';
+const password = '*****';
 const api = new MelipayamakApi(username, password);
 
 const SaleProduct = new mongoose.Schema(
@@ -19,7 +19,8 @@ const SaleProduct = new mongoose.Schema(
     send: { type: Boolean, default: false },
     authority: { type: String, default: "" },
     userID: { type: mongoose.Types.ObjectId, ref: "user" },
-    code: { type: String, default: "" }
+    code: { type: String, default: "" },
+    notSend: { type: Boolean, default: false }
   },
   {
     timestamps: true,
@@ -48,7 +49,7 @@ SaleProduct.pre("findOneAndUpdate", async function (next) {
   let month = timestamp.substr(-10, 2);
   let year = timestamp.substr(0, 4);
   const sms = api.sms()
-  const to = "09353040700";
+  const to = "0900000";
   const from = "50004001040700";
   let text = `
   خریدی انجام شده به نام ${userID.first_name}${userID.last_name} به سایت مراجعه کنید
@@ -74,19 +75,7 @@ SaleProduct.pre("findOneAndUpdate", async function (next) {
   }).catch(err => {
     console.log("err" + err)
   })
-  const to3 = "09010674017";
-  const from3 = "50004001040700";
-  let text3 = `
-  خریدی انجام شده به نام ${userID.first_name}${userID.last_name} به سایت مراجعه کنید
-  تاریخ خرید: ${year}/${month}/${day} ${hour}:${minute}:${second}
-  قیمت نهایی : ${payment.amount}
-  محصولات خریداری شده:${stringTitle}
-  `
-  sms.send(to3, from3, text3).then(e => {
-    console.log(e)
-  }).catch(err => {
-    console.log("err" + err)
-  });
+  
   const to2 = "" + userID.phone;
   const from2 = "50004001040700";
   let text2 = `
